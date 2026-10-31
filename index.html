@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1B1F3B">
+<title>Vibe</title>
+<style>
+:root{--ink:#1B1F3B;--bg:#F2F4FF;--card:#fff;--pink:#E4287C;--teal:#12B5A6;--mute:#6B7094;--line:#DDE0F3}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);display:flex;flex-direction:column}
+header{background:var(--ink);color:#fff;padding:14px 16px;display:flex;justify-content:space-between;align-items:center}
+header h1{font-size:22px;letter-spacing:-.5px}
+.saldo{background:var(--pink);padding:6px 12px;border-radius:99px;font-weight:700;font-size:14px}
+main{flex:1;overflow-y:auto;padding:14px}
+.aba{display:none}.aba.on{display:block}
+nav{display:flex;background:#fff;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0)}
+nav button{flex:1;padding:12px 0;border:0;background:none;font-size:14px;color:var(--mute);font-weight:600}
+nav button.on{color:var(--pink);box-shadow:inset 0 3px 0 var(--pink)}
+.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;border:1px solid var(--line)}
+.video{height:180px;border-radius:10px;background:linear-gradient(135deg,var(--ink),#3B3F7A);color:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;margin-bottom:10px}
+.barra{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-bottom:10px}
+.barra i{display:block;height:100%;width:0;background:var(--teal)}
+.btn{width:100%;padding:12px;border:0;border-radius:10px;background:var(--pink);color:#fff;font-size:15px;font-weight:700}
+.btn:disabled{background:var(--line);color:var(--mute)}
+.chat-item{display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.chat-item:last-child{border:0}
+.avatar{width:44px;height:44px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none}
+.chat-item small{color:var(--mute)}
+.msgs{display:flex;flex-direction:column;gap:6px;margin-bottom:10px;max-height:46vh;overflow-y:auto}
+.msg{padding:8px 12px;border-radius:12px;max-width:80%;font-size:15px}
+.msg.eu{background:var(--pink);color:#fff;align-self:flex-end}
+.msg.ele{background:var(--line);align-self:flex-start}
+.envio{display:flex;gap:8px}
+.envio input{flex:1;padding:12px;border:1px solid var(--line);border-radius:10px;font-size:15px}
+.envio button{padding:0 16px;border:0;border-radius:10px;background:var(--ink);color:#fff;font-weight:700}
+.grande{font-size:44px;font-weight:800;color:var(--pink);margin:6px 0}
+.premio{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
+.premio:last-child{border:0}
+.premio button{padding:8px 14px;border:0;border-radius:8px;background:var(--teal);color:#fff;font-weight:700}
+.premio button:disabled{background:var(--line);color:var(--mute)}
+@media (prefers-reduced-motion:no-preference){.barra i{transition:width .2s linear}}
+</style>
+</head>
+<body>
+<header><h1>Vibe</h1><div class="saldo"><span id="topo">0</span> Vibes</div></header>
+
+<main>
+  <section id="chat" class="aba on">
+    <div id="lista" class="card">
+      <div class="chat-item" data-nome="@ana_sol"><div class="avatar">A</div><div><b>@ana_sol</b><br><small>Toque para conversar</small></div></div>
+      <div class="chat-item" data-nome="@rui.beats"><div class="avatar">R</div><div><b>@rui.beats</b><br><small>Toque para conversar</small></div></div>
+      <div class="chat-item" data-nome="@mari_viaja"><div class="avatar">M</div><div><b>@mari_viaja</b><br><small>Toque para conversar</small></div></div>
+    </div>
+    <div id="conversa" class="card" hidden>
+      <p style="margin-bottom:10px"><button id="voltar" style="border:0;background:none;color:var(--pink);font-weight:700;font-size:15px">‹ Voltar</button> <b id="com"></b></p>
+      <div id="msgs" class="msgs"></div>
+      <div class="envio"><input id="texto" placeholder="Escreva uma mensagem" autocomplete="off"><button id="enviar">Enviar</button></div>
+    </div>
+  </section>
+
+  <section id="feed" class="aba">
+    <div class="card"><div class="video">Vídeo 1 · Dicas rápidas de culinária</div>
+      <div class="barra"><i id="b1"></i></div>
+      <button class="btn" data-v="1">Assistir 10 s e ganhar 5 Vibes</button></div>
+    <div class="card"><div class="video">Vídeo 2 · Um minuto de alongamentos</div>
+      <div class="barra"><i id="b2"></i></div>
+      <button class="btn" data-v="2">Assistir 10 s e ganhar 5 Vibes</button></div>
+    <div class="card"><div class="video">Vídeo 3 · Cidades para visitar</div>
+      <div class="barra"><i id="b3"></i></div>
+      <button class="btn" data-v="3">Assistir 10 s e ganhar 5 Vibes</button></div>
+  </section>
+
+  <section id="carteira" class="aba">
+    <div class="card"><small style="color:var(--mute)">O seu saldo</small>
+      <div class="grande"><span id="saldo">0</span> Vibes</div>
+      <small style="color:var(--mute)">Versão de demonstração: os pontos ficam só neste aparelho.</small></div>
+    <div class="card"><b>Benefícios</b>
+      <div class="premio"><span>Destaque no seu perfil por 24 h</span><button data-custo="50">50</button></div>
+      <div class="premio"><span>Tema de cores exclusivo</span><button data-custo="120">120</button></div>
+      <div class="premio"><span>Selo "Apoiante" no apelido</span><button data-custo="300">300</button></div>
+    </div>
+  </section>
+</main>
+
+<nav>
+  <button class="on" data-aba="chat">Chat</button>
+  <button data-aba="feed">Vídeos</button>
+  <button data-aba="carteira">Carteira</button>
+</nav>
+
+<script>
+var vibes = 0;
+try { vibes = parseInt(localStorage.getItem('vibes')) || 0; } catch (e) {}
+
+function mostrarSaldo() {
+  document.getElementById('topo').textContent = vibes;
+  document.getElementById('saldo').textContent = vibes;
+  document.querySelectorAll('.premio button').forEach(function (b) {
+    b.disabled = vibes < parseInt(b.dataset.custo);
+  });
+  try { localStorage.setItem('vibes', vibes); } catch (e) {}
+}
+
+// Abas
+document.querySelectorAll('nav button').forEach(function (b) {
+  b.onclick = function () {
+    document.querySelectorAll('nav button').forEach(function (x) { x.classList.remove('on'); });
+    document.querySelectorAll('.aba').forEach(function (x) { x.classList.remove('on'); });
+    b.classList.add('on');
+    document.getElementById(b.dataset.aba).classList.add('on');
+  };
+});
+
+// Vídeos: assistir 10 segundos para ganhar Vibes
+document.querySelectorAll('#feed .btn').forEach(function (btn) {
+  btn.onclick = function () {
+    var barra = document.getElementById('b' + btn.dataset.v);
+    var seg = 0;
+    btn.disabled = true;
+    var t = setInterval(function () {
+      seg += 0.2;
+      barra.style.width = Math.min(seg * 10, 100) + '%';
+      btn.textContent = 'A assistir… ' + Math.max(0, Math.ceil(10 - seg)) + ' s';
+      if (seg >= 10) {
+        clearInterval(t);
+        vibes += 5; mostrarSaldo();
+        btn.textContent = '+5 Vibes ganhos';
+      }
+    }, 200);
+  };
+});
+
+// Chat (demonstração local)
+var historico = {}, atual = '';
+function desenhar() {
+  var caixa = document.getElementById('msgs');
+  caixa.innerHTML = '';
+  (historico[atual] || []).forEach(function (m) {
+    var d = document.createElement('div');
+    d.className = 'msg ' + m.de;
+    d.textContent = m.texto;
+    caixa.appendChild(d);
+  });
+  caixa.scrollTop = caixa.scrollHeight;
+}
+document.querySelectorAll('.chat-item').forEach(function (i) {
+  i.onclick = function () {
+    atual = i.dataset.nome;
+    document.getElementById('com').textContent = atual;
+    document.getElementById('lista').hidden = true;
+    document.getElementById('conversa').hidden = false;
+    desenhar();
+  };
+});
+document.getElementById('voltar').onclick = function () {
+  document.getElementById('conversa').hidden = true;
+  document.getElementById('lista').hidden = false;
+};
+function enviar() {
+  var campo = document.getElementById('texto');
+  var txt = campo.value.trim();
+  if (!txt) return;
+  (historico[atual] = historico[atual] || []).push({ de: 'eu', texto: txt });
+  campo.value = '';
+  desenhar();
+}
+document.getElementById('enviar').onclick = enviar;
+document.getElementById('texto').onkeydown = function (e) { if (e.key === 'Enter') enviar(); };
+
+mostrarSaldo();
+</script>
+</body>
+</html>
